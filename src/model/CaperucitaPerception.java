@@ -131,6 +131,10 @@ public class CaperucitaPerception extends Perception {
 			}
 		}
 
-		//treesPositions.stream().filter(p -> p.getY() == caperucitaPosition.getY()).filter(p -> p.getX() > caperucitaPosition.getX()).min(p -> (int) p.getX()).get();
+		this.distanciaArbolDerecha = treesPositions.stream()
+				.filter(p -> p.getY() == caperucitaPosition.getY())
+				.filter(p -> p.getX() > caperucitaPosition.getX())
+				.mapToInt(p -> (int) p.getX())
+				.min().orElse((int) (caperucitaPosition.getX() + 1)) - (int)caperucitaPosition.getX() - 1;
 	}
 }
