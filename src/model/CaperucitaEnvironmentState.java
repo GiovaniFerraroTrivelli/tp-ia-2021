@@ -3,7 +3,6 @@ package model;
 import frsf.cidisi.faia.state.EnvironmentState;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class CaperucitaEnvironmentState extends EnvironmentState {
 

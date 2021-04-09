@@ -59,9 +59,8 @@ public class CaperucitaPerception extends Perception {
 	
 	@Override
 	public void initPerception(Agent agent, Environment environment) {
-		CaperucitaEnvironment caperucitaEnvironment = (CaperucitaEnvironment) environment;
+	CaperucitaEnvironment caperucitaEnvironment = (CaperucitaEnvironment) environment;
 		Point caperucitaPosition = caperucitaEnvironment.getEnvironmentState().getCaperucitaPosition();
-		Point wolfPosition = caperucitaEnvironment.getEnvironmentState().getWolfPosition();
 		int[][] scenary = caperucitaEnvironment.getEnvironmentState().getScenary();
 
 		this.cantidadTortasArriba = 0;
@@ -132,5 +131,159 @@ public class CaperucitaPerception extends Perception {
 				break;
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		String res = "";
+		res += "\n- cantidadTortasArriba: " + cantidadTortasArriba;
+		res += "\n- cantidadTortasDerecha: " + cantidadTortasDerecha;
+		res += "\n- cantidadTortasIzquierda: " + cantidadTortasIzquierda;
+		res += "\n- cantidadTortasAbajo: " + cantidadTortasAbajo;
+
+		res += "\n- hayFloresArriba: " + hayFloresArriba;
+		res += "\n- hayFloresDerecha: " + hayFloresDerecha;
+		res += "\n- hayFloresAbajo: " + hayFloresAbajo;
+		res += "\n- hayFloresIzquierda: " + hayFloresIzquierda;
+
+		res += "\n- hayLoboArriba: " + hayLoboArriba;
+		res += "\n- hayLoboDerecha: " + hayLoboDerecha;
+		res += "\n- hayLoboAbajo: " + hayLoboAbajo;
+		res += "\n- hayLoboIzquierda: " + hayLoboIzquierda;
+
+		res += "\n- distanciaArbolArriba: " + distanciaArbolArriba;
+		res += "\n- distanciaArbolDerecha: " + distanciaArbolDerecha;
+		res += "\n- distanciaArbolAbajo: " + distanciaArbolAbajo;
+		res += "\n- distanciaArbolIzquierda: " + distanciaArbolIzquierda;
+
+		return res;
+	}
+
+	public int getCantidadTortasArriba() {
+		return cantidadTortasArriba;
+	}
+
+	public void setCantidadTortasArriba(int cantidadTortasArriba) {
+		this.cantidadTortasArriba = cantidadTortasArriba;
+	}
+
+	public int getCantidadTortasDerecha() {
+		return cantidadTortasDerecha;
+	}
+
+	public void setCantidadTortasDerecha(int cantidadTortasDerecha) {
+		this.cantidadTortasDerecha = cantidadTortasDerecha;
+	}
+
+	public int getCantidadTortasAbajo() {
+		return cantidadTortasAbajo;
+	}
+
+	public void setCantidadTortasAbajo(int cantidadTortasAbajo) {
+		this.cantidadTortasAbajo = cantidadTortasAbajo;
+	}
+
+	public int getCantidadTortasIzquierda() {
+		return cantidadTortasIzquierda;
+	}
+
+	public void setCantidadTortasIzquierda(int cantidadTortasIzquierda) {
+		this.cantidadTortasIzquierda = cantidadTortasIzquierda;
+	}
+
+	public int getHayFloresArriba() {
+		return hayFloresArriba;
+	}
+
+	public void setHayFloresArriba(int hayFloresArriba) {
+		this.hayFloresArriba = hayFloresArriba;
+	}
+
+	public int getHayFloresDerecha() {
+		return hayFloresDerecha;
+	}
+
+	public void setHayFloresDerecha(int hayFloresDerecha) {
+		this.hayFloresDerecha = hayFloresDerecha;
+	}
+
+	public int getHayFloresAbajo() {
+		return hayFloresAbajo;
+	}
+
+	public void setHayFloresAbajo(int hayFloresAbajo) {
+		this.hayFloresAbajo = hayFloresAbajo;
+	}
+
+	public int getHayFloresIzquierda() {
+		return hayFloresIzquierda;
+	}
+
+	public void setHayFloresIzquierda(int hayFloresIzquierda) {
+		this.hayFloresIzquierda = hayFloresIzquierda;
+	}
+
+	public int getHayLoboArriba() {
+		return hayLoboArriba;
+	}
+
+	public void setHayLoboArriba(int hayLoboArriba) {
+		this.hayLoboArriba = hayLoboArriba;
+	}
+
+	public int getHayLoboDerecha() {
+		return hayLoboDerecha;
+	}
+
+	public void setHayLoboDerecha(int hayLoboDerecha) {
+		this.hayLoboDerecha = hayLoboDerecha;
+	}
+
+	public int getHayLoboAbajo() {
+		return hayLoboAbajo;
+	}
+
+	public void setHayLoboAbajo(int hayLoboAbajo) {
+		this.hayLoboAbajo = hayLoboAbajo;
+	}
+
+	public int getHayLoboIzquierda() {
+		return hayLoboIzquierda;
+	}
+
+	public void setHayLoboIzquierda(int hayLoboIzquierda) {
+		this.hayLoboIzquierda = hayLoboIzquierda;
+	}
+
+	public int getDistanciaArbolArriba() {
+		return distanciaArbolArriba;
+	}
+
+	public void setDistanciaArbolArriba(int distanciaArbolArriba) {
+		this.distanciaArbolArriba = distanciaArbolArriba;
+	}
+
+	public int getDistanciaArbolDerecha() {
+		return distanciaArbolDerecha;
+	}
+
+	public void setDistanciaArbolDerecha(int distanciaArbolDerecha) {
+		this.distanciaArbolDerecha = distanciaArbolDerecha;
+	}
+
+	public int getDistanciaArbolAbajo() {
+		return distanciaArbolAbajo;
+	}
+
+	public void setDistanciaArbolAbajo(int distanciaArbolAbajo) {
+		this.distanciaArbolAbajo = distanciaArbolAbajo;
+	}
+
+	public int getDistanciaArbolIzquierda() {
+		return distanciaArbolIzquierda;
+	}
+
+	public void setDistanciaArbolIzquierda(int distanciaArbolIzquierda) {
+		this.distanciaArbolIzquierda = distanciaArbolIzquierda;
 	}
 }
