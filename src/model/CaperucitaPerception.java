@@ -283,7 +283,11 @@ public class CaperucitaPerception extends Perception {
 		return distanciaArbolIzquierda;
 	}
 
-	public void setDistanciaArbolIzquierda(int distanciaArbolIzquierda) {
-		this.distanciaArbolIzquierda = distanciaArbolIzquierda;
-	}
+	public void setDistanciaArbolIzquierda(int distanciaArbolIzquierda) { this.distanciaArbolIzquierda = distanciaArbolIzquierda; }
+
+	public Point getCaperucitaPosition() { return caperucitaPosition; }
+
+	public void setCaperucitaPosition(Point caperucitaPosition) { this.caperucitaPosition = caperucitaPosition;	}
+
+
 }

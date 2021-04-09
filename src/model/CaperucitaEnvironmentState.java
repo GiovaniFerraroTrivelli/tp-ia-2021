@@ -9,11 +9,11 @@ public class CaperucitaEnvironmentState extends EnvironmentState {
     public static final int SCENARY_WIDTH = 20;
     public static final int SCENARY_HEIGHT = 20;
 
-    private int[][] scenary = new int[SCENARY_HEIGHT][SCENARY_WIDTH];
+    private final int[][] INITIAL_SCENARY = new int[SCENARY_HEIGHT][SCENARY_WIDTH];
+    private int[][] scenary = INITIAL_SCENARY;
     private Point wolfPosition;
     private Point caperucitaPosition;
 
-    private final Point POSICION_INICIAL = null;
 
     public int[][] getScenary() {
         return scenary;
@@ -38,6 +38,8 @@ public class CaperucitaEnvironmentState extends EnvironmentState {
     public void setCaperucitaPosition(Point caperucitaPosition) {
         this.caperucitaPosition = caperucitaPosition;
     }
+
+    public int[][] getINITIAL_SCENARY() { return INITIAL_SCENARY; }
 
     @Override
     public void initState() {

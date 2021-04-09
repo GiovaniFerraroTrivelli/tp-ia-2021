@@ -9,6 +9,9 @@ public class CaperucitaState extends SearchBasedAgentState {
     private Point posicionActual;
     private Integer vidas;
     private Integer tortas;
+    private CaperucitaPerception perceptionActual;
+
+    private final Point POSICION_INICIAL = null;
 
     public CaperucitaState() {
         this.initState();
@@ -83,4 +86,10 @@ public class CaperucitaState extends SearchBasedAgentState {
     public void setTortas(Integer tortas) {
         this.tortas = tortas;
     }
+
+    public CaperucitaPerception getPerceptionActual() { return perceptionActual; }
+
+    public void setPerceptionActual(CaperucitaPerception perceptionActual) { this.perceptionActual = perceptionActual; }
+
+    public Point getPOSICION_INICIAL() { return POSICION_INICIAL; }
 }
