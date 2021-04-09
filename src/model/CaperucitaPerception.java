@@ -11,7 +11,12 @@ import java.util.ArrayList;
 public class CaperucitaPerception extends Perception {
 
 	public static int UNKNOWN_PERCEPTION = -1;
-	
+
+	public static int SCENARY_TREE = 1;
+	public static int SCENARY_CAKE = 2;
+	public static int SCENARY_WOLF = 3;
+	public static int SCENARY_FLOWER = 4;
+
 	private int cantidadTortasArriba;
 	private int cantidadTortasDerecha;
 	private int cantidadTortasAbajo;
@@ -57,9 +62,7 @@ public class CaperucitaPerception extends Perception {
 		CaperucitaEnvironment caperucitaEnvironment = (CaperucitaEnvironment) environment;
 		Point caperucitaPosition = caperucitaEnvironment.getEnvironmentState().getCaperucitaPosition();
 		Point wolfPosition = caperucitaEnvironment.getEnvironmentState().getWolfPosition();
-		ArrayList<Point> cakesPositions = caperucitaEnvironment.getEnvironmentState().getCakesPositions();
-		ArrayList<Point> flowersPositions = caperucitaEnvironment.getEnvironmentState().getFlowersPositions();
-		ArrayList<Point> treesPositions = caperucitaEnvironment.getEnvironmentState().getTreesPositions();
+		int[][] scenary = caperucitaEnvironment.getEnvironmentState().getScenary();
 
 		this.cantidadTortasArriba = 0;
 		this.cantidadTortasDerecha = 0;
@@ -76,65 +79,58 @@ public class CaperucitaPerception extends Perception {
 		this.hayFloresAbajo = 0;
 		this.hayFloresIzquierda = 0;
 
-		if(caperucitaPosition.getX() == wolfPosition.getX()) {
-			if(caperucitaPosition.getY() > wolfPosition.getY())
-				this.hayLoboAbajo = 1;
-			else if(caperucitaPosition.getY() < wolfPosition.getY())
-				this.hayLoboArriba = 1;
-		}
-		else if(caperucitaPosition.getY() == wolfPosition.getY()) {
-			if(caperucitaPosition.getX() > wolfPosition.getX())
+		// horizontal
+		for(int i = caperucitaPosition.x; i >= 0; i--) {
+			if(scenary[caperucitaPosition.x][i] == SCENARY_FLOWER)
+				this.hayFloresIzquierda = 1;
+			else if(scenary[caperucitaPosition.x][i] == SCENARY_WOLF)
 				this.hayLoboIzquierda = 1;
-			else if(caperucitaPosition.getX() < wolfPosition.getX())
+			else if(scenary[caperucitaPosition.x][i] == SCENARY_CAKE)
+				this.cantidadTortasIzquierda++;
+			else if(scenary[caperucitaPosition.x][i] == SCENARY_TREE) {
+				distanciaArbolIzquierda = caperucitaPosition.x - i;
+				break;
+			}
+		}
+
+		for(int i = caperucitaPosition.x; i < CaperucitaEnvironmentState.SCENARY_WIDTH; i++) {
+			if(scenary[caperucitaPosition.x][i] == SCENARY_FLOWER)
+				this.hayFloresDerecha = 1;
+			else if(scenary[caperucitaPosition.x][i] == SCENARY_WOLF)
 				this.hayLoboDerecha = 1;
-		}
-
-		for(Point flowerPosition: flowersPositions) {
-			if(flowerPosition.getX() == caperucitaPosition.getX()) {
-				if(flowerPosition.getY() > caperucitaPosition.getY()) {
-					hayFloresArriba = 1;
-					break;
-				}
-				else if(flowerPosition.getY() > caperucitaPosition.getY()) {
-					hayFloresAbajo = 1;
-					break;
-				}
-			}
-			else {
-				if(flowerPosition.getX() > caperucitaPosition.getX()) {
-					hayFloresDerecha = 1;
-					break;
-				}
-				else if(flowerPosition.getX() > caperucitaPosition.getX()) {
-					hayFloresIzquierda = 1;
-					break;
-				}
+			else if(scenary[caperucitaPosition.x][i] == SCENARY_CAKE)
+				this.cantidadTortasDerecha++;
+			else if(scenary[caperucitaPosition.x][i] == SCENARY_TREE) {
+				distanciaArbolDerecha = i - caperucitaPosition.x;
+				break;
 			}
 		}
 
-		for(Point cakePosition: cakesPositions) {
-			if(cakePosition.getX() == caperucitaPosition.getX()) {
-				if(cakePosition.getY() > caperucitaPosition.getY()) {
-					this.cantidadTortasArriba++;
-				}
-				else if(cakePosition.getY() > caperucitaPosition.getY()) {
-					this.cantidadTortasAbajo++;
-				}
-			}
-			else {
-				if(cakePosition.getX() > caperucitaPosition.getX()) {
-					this.cantidadTortasDerecha++;
-				}
-				else if(cakePosition.getX() > caperucitaPosition.getX()) {
-					this.cantidadTortasIzquierda++;
-				}
+		// vertical
+		for(int j = caperucitaPosition.y; j >= 0; j--) {
+			if(scenary[j][caperucitaPosition.y] == SCENARY_FLOWER)
+				this.hayFloresArriba = 1;
+			else if(scenary[j][caperucitaPosition.y] == SCENARY_WOLF)
+				this.hayLoboArriba = 1;
+			else if(scenary[j][caperucitaPosition.y] == SCENARY_CAKE)
+				this.cantidadTortasArriba++;
+			else if(scenary[j][caperucitaPosition.y] == SCENARY_TREE) {
+				distanciaArbolArriba = caperucitaPosition.y - j;
+				break;
 			}
 		}
 
-		this.distanciaArbolDerecha = treesPositions.stream()
-				.filter(p -> p.getY() == caperucitaPosition.getY())
-				.filter(p -> p.getX() > caperucitaPosition.getX())
-				.mapToInt(p -> (int) p.getX())
-				.min().orElse((int) (caperucitaPosition.getX() + 1)) - (int)caperucitaPosition.getX() - 1;
+		for(int j = caperucitaPosition.y; j < CaperucitaEnvironmentState.SCENARY_HEIGHT; j++) {
+			if(scenary[j][caperucitaPosition.y] == SCENARY_FLOWER)
+				this.hayFloresAbajo = 1;
+			else if(scenary[j][caperucitaPosition.y] == SCENARY_WOLF)
+				this.hayLoboAbajo = 1;
+			else if(scenary[j][caperucitaPosition.y] == SCENARY_CAKE)
+				this.cantidadTortasAbajo++;
+			else if(scenary[j][caperucitaPosition.y]== SCENARY_TREE) {
+				distanciaArbolAbajo = j - caperucitaPosition.y;
+				break;
+			}
+		}
 	}
 }

@@ -7,36 +7,21 @@ import java.util.ArrayList;
 
 public class CaperucitaEnvironmentState extends EnvironmentState {
 
-    private ArrayList<Point> cakesPositions;
-    private ArrayList<Point> flowersPositions;
-    private ArrayList<Point> treesPositions;
+    public static final int SCENARY_WIDTH = 20;
+    public static final int SCENARY_HEIGHT = 20;
+
+    private int[][] scenary = new int[SCENARY_HEIGHT][SCENARY_WIDTH];
     private Point wolfPosition;
     private Point caperucitaPosition;
 
     private final Point POSICION_INICIAL = null;
 
-    public ArrayList<Point> getCakesPositions() {
-        return cakesPositions;
+    public int[][] getScenary() {
+        return scenary;
     }
 
-    public void setCakesPositions(ArrayList<Point> cakesPositions) {
-        this.cakesPositions = cakesPositions;
-    }
-
-    public ArrayList<Point> getFlowersPositions() {
-        return flowersPositions;
-    }
-
-    public void setFlowersPositions(ArrayList<Point> flowersPositions) {
-        this.flowersPositions = flowersPositions;
-    }
-
-    public ArrayList<Point> getTreesPositions() {
-        return treesPositions;
-    }
-
-    public void setTreesPositions(ArrayList<Point> treesPositions) {
-        this.treesPositions = treesPositions;
+    public void setScenary(int[][] scenary) {
+        this.scenary = scenary;
     }
 
     public Point getWolfPosition() {
@@ -53,10 +38,6 @@ public class CaperucitaEnvironmentState extends EnvironmentState {
 
     public void setCaperucitaPosition(Point caperucitaPosition) {
         this.caperucitaPosition = caperucitaPosition;
-    }
-
-    public Point getPOSICION_INICIAL() {
-        return POSICION_INICIAL;
     }
 
     @Override
