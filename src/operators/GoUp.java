@@ -4,35 +4,76 @@ import frsf.cidisi.faia.agent.search.SearchAction;
 import frsf.cidisi.faia.agent.search.SearchBasedAgentState;
 import frsf.cidisi.faia.state.AgentState;
 import frsf.cidisi.faia.state.EnvironmentState;
+import model.CaperucitaEnvironmentState;
+import model.CaperucitaPerception;
+import model.CaperucitaState;
+
+import java.awt.*;
+
+import static constants.Constants.SCENARY_CAKE;
 
 public class GoUp extends SearchAction {
 
-	public static int SCENARY_TREE = 1;
-	public static int SCENARY_CAKE = 2;
-	public static int SCENARY_WOLF = 3;
-	public static int SCENARY_FLOWER = 4;
+    @Override
+    public SearchBasedAgentState execute(SearchBasedAgentState s) {
+        CaperucitaState caperucitaState = (CaperucitaState) s;
+        Point posicionActual = caperucitaState.getPosicionActual();
+        CaperucitaPerception perceptionActual = caperucitaState.getPerceptionActual();
 
-	@Override
-	public SearchBasedAgentState execute(SearchBasedAgentState s) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        if (caperucitaState.getPerceptionActual().getHayLoboArriba() == 1) {
+            //caperucitaState.deathRespawn();
+            return null;
+        } else {
+            caperucitaState.setPosicionActual(new Point(
+                            posicionActual.x,
+                            posicionActual.y - perceptionActual.getDistanciaArbolArriba()
+                    )
+            );
 
-	@Override
-	public Double getCost() {
-		return 1.0;
-	}
+            caperucitaState.setTortas(caperucitaState.getTortas() + perceptionActual.getCantidadTortasArriba());
+        }
 
-	@Override
-	public EnvironmentState execute(AgentState ast, EnvironmentState est) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        return caperucitaState;
+    }
 
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Double getCost() {
+        return 1.0;
+    }
+
+    @Override
+    public EnvironmentState execute(AgentState ast, EnvironmentState est) {
+        CaperucitaEnvironmentState caperucitaEnvironment = (CaperucitaEnvironmentState) est;
+        CaperucitaState caperucitaState = (CaperucitaState) ast;
+        Point posicionActual = caperucitaState.getPosicionActual();
+        CaperucitaPerception perceptionActual = caperucitaState.getPerceptionActual();
+        Integer distanciaArriba = perceptionActual.getDistanciaArbolArriba();
+
+        if (caperucitaState.getPerceptionActual().getHayLoboArriba() == 1) {
+            //caperucitaState.deathRespawn();
+            //caperucitaEnvironment.setScenary(caperucitaEnvironment.getInicialScenary());
+            return null;
+        } else {
+            caperucitaState.setPosicionActual(new Point(
+                            posicionActual.x,
+                            posicionActual.y - distanciaArriba
+                    )
+            );
+
+            caperucitaState.setTortas(caperucitaState.getTortas() + perceptionActual.getCantidadTortasArriba());
+
+            caperucitaEnvironment.setCaperucitaPosition(caperucitaState.getPosicionActual());
+            for(int i = posicionActual.y ; i >= posicionActual.y - distanciaArriba ; i--)
+                if(caperucitaEnvironment.getForest()[i][posicionActual.x] == SCENARY_CAKE)
+                    caperucitaEnvironment.getForest()[i][posicionActual.x] = 0;
+        }
+
+        return caperucitaEnvironment;
+    }
+
+    @Override
+    public String toString() {
+        return "irArriba";
+    }
 
 }

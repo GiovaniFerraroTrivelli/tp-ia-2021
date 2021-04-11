@@ -1,26 +1,31 @@
 package model;
 
 import frsf.cidisi.faia.state.EnvironmentState;
+import scenary.Scenary;
 
 import java.awt.*;
 
+import static constants.Constants.SCENARY_HEIGHT;
+import static constants.Constants.SCENARY_WIDTH;
+
 public class CaperucitaEnvironmentState extends EnvironmentState {
-
-    public static final int SCENARY_WIDTH = 20;
-    public static final int SCENARY_HEIGHT = 20;
-
-    private final int[][] INITIAL_SCENARY = new int[SCENARY_HEIGHT][SCENARY_WIDTH];
-    private int[][] scenary = INITIAL_SCENARY;
+    private final int[][] INITIAL_FOREST = new int[SCENARY_HEIGHT][SCENARY_WIDTH];
+    private int[][] currentForest = INITIAL_FOREST;
     private Point wolfPosition;
     private Point caperucitaPosition;
 
+    public CaperucitaEnvironmentState(Scenary scenary) {
+        currentForest = scenary.getForest();
+        wolfPosition = scenary.getWolfPosition();
+        caperucitaPosition = scenary.getCaperucitaPosition();
+    }
 
-    public int[][] getScenary() {
-        return scenary;
+    public int[][] getForest() {
+        return currentForest;
     }
 
     public void setScenary(int[][] scenary) {
-        this.scenary = scenary;
+        this.currentForest = scenary;
     }
 
     public Point getWolfPosition() {
@@ -39,18 +44,25 @@ public class CaperucitaEnvironmentState extends EnvironmentState {
         this.caperucitaPosition = caperucitaPosition;
     }
 
-    public int[][] getINITIAL_SCENARY() { return INITIAL_SCENARY; }
+    public int[][] getInicialScenary() {
+        return INITIAL_FOREST;
+    }
 
     @Override
     public void initState() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        StringBuilder matrix = new StringBuilder();
 
+        for (int i = 0; i < SCENARY_HEIGHT; i++) {
+            matrix.append("\n").append(currentForest[i][0]);
+            for (int j = 1; j < SCENARY_WIDTH; j++) {
+                matrix.append(" ").append(currentForest[i][j]);
+            }
+        }
+
+        return matrix.toString();
+    }
 }

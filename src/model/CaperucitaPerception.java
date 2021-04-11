@@ -5,18 +5,9 @@ import frsf.cidisi.faia.agent.Perception;
 import frsf.cidisi.faia.environment.Environment;
 
 import java.awt.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import static constants.Constants.*;
 
 public class CaperucitaPerception extends Perception {
-
-	public static int UNKNOWN_PERCEPTION = -1;
-
-	public static int SCENARY_TREE = 1;
-	public static int SCENARY_CAKE = 2;
-	public static int SCENARY_WOLF = 3;
-	public static int SCENARY_FLOWER = 4;
-
 	private int cantidadTortasArriba;
 	private int cantidadTortasDerecha;
 	private int cantidadTortasAbajo;
@@ -55,13 +46,14 @@ public class CaperucitaPerception extends Perception {
 	
 	public CaperucitaPerception(Agent agent, Environment environment) {
 		super(agent, environment);
+		initPerception(agent, environment);
 	}
 	
 	@Override
 	public void initPerception(Agent agent, Environment environment) {
-	CaperucitaEnvironment caperucitaEnvironment = (CaperucitaEnvironment) environment;
+		CaperucitaEnvironment caperucitaEnvironment = (CaperucitaEnvironment) environment;
 		Point caperucitaPosition = caperucitaEnvironment.getEnvironmentState().getCaperucitaPosition();
-		int[][] scenary = caperucitaEnvironment.getEnvironmentState().getScenary();
+		int[][] scenary = caperucitaEnvironment.getEnvironmentState().getForest();
 
 		this.cantidadTortasArriba = 0;
 		this.cantidadTortasDerecha = 0;
@@ -80,54 +72,54 @@ public class CaperucitaPerception extends Perception {
 
 		// horizontal
 		for(int i = caperucitaPosition.x; i >= 0; i--) {
-			if(scenary[caperucitaPosition.x][i] == SCENARY_FLOWER)
+			if(scenary[caperucitaPosition.y][i] == SCENARY_FLOWER)
 				this.hayFloresIzquierda = 1;
-			else if(scenary[caperucitaPosition.x][i] == SCENARY_WOLF)
+			else if(scenary[caperucitaPosition.y][i] == SCENARY_WOLF)
 				this.hayLoboIzquierda = 1;
-			else if(scenary[caperucitaPosition.x][i] == SCENARY_CAKE)
+			else if(scenary[caperucitaPosition.y][i] == SCENARY_CAKE)
 				this.cantidadTortasIzquierda++;
-			else if(scenary[caperucitaPosition.x][i] == SCENARY_TREE) {
-				distanciaArbolIzquierda = caperucitaPosition.x - i;
+			else if(scenary[caperucitaPosition.y][i] == SCENARY_TREE) {
+				distanciaArbolIzquierda = caperucitaPosition.x - i - 1;
 				break;
 			}
 		}
 
-		for(int i = caperucitaPosition.x; i < CaperucitaEnvironmentState.SCENARY_WIDTH; i++) {
-			if(scenary[caperucitaPosition.x][i] == SCENARY_FLOWER)
+		for(int i = caperucitaPosition.x; i < SCENARY_WIDTH; i++) {
+			if(scenary[caperucitaPosition.y][i] == SCENARY_FLOWER)
 				this.hayFloresDerecha = 1;
-			else if(scenary[caperucitaPosition.x][i] == SCENARY_WOLF)
+			else if(scenary[caperucitaPosition.y][i] == SCENARY_WOLF)
 				this.hayLoboDerecha = 1;
-			else if(scenary[caperucitaPosition.x][i] == SCENARY_CAKE)
+			else if(scenary[caperucitaPosition.y][i] == SCENARY_CAKE)
 				this.cantidadTortasDerecha++;
-			else if(scenary[caperucitaPosition.x][i] == SCENARY_TREE) {
-				distanciaArbolDerecha = i - caperucitaPosition.x;
+			else if(scenary[caperucitaPosition.y][i] == SCENARY_TREE) {
+				distanciaArbolDerecha = i - caperucitaPosition.x - 1;
 				break;
 			}
 		}
 
 		// vertical
 		for(int j = caperucitaPosition.y; j >= 0; j--) {
-			if(scenary[j][caperucitaPosition.y] == SCENARY_FLOWER)
+			if(scenary[j][caperucitaPosition.x] == SCENARY_FLOWER)
 				this.hayFloresArriba = 1;
-			else if(scenary[j][caperucitaPosition.y] == SCENARY_WOLF)
+			else if(scenary[j][caperucitaPosition.x] == SCENARY_WOLF)
 				this.hayLoboArriba = 1;
-			else if(scenary[j][caperucitaPosition.y] == SCENARY_CAKE)
+			else if(scenary[j][caperucitaPosition.x] == SCENARY_CAKE)
 				this.cantidadTortasArriba++;
-			else if(scenary[j][caperucitaPosition.y] == SCENARY_TREE) {
-				distanciaArbolArriba = caperucitaPosition.y - j;
+			else if(scenary[j][caperucitaPosition.x] == SCENARY_TREE) {
+				distanciaArbolArriba = caperucitaPosition.y - j - 1;
 				break;
 			}
 		}
 
-		for(int j = caperucitaPosition.y; j < CaperucitaEnvironmentState.SCENARY_HEIGHT; j++) {
-			if(scenary[j][caperucitaPosition.y] == SCENARY_FLOWER)
+		for(int j = caperucitaPosition.y; j < SCENARY_HEIGHT; j++) {
+			if(scenary[j][caperucitaPosition.x] == SCENARY_FLOWER)
 				this.hayFloresAbajo = 1;
-			else if(scenary[j][caperucitaPosition.y] == SCENARY_WOLF)
+			else if(scenary[j][caperucitaPosition.x] == SCENARY_WOLF)
 				this.hayLoboAbajo = 1;
-			else if(scenary[j][caperucitaPosition.y] == SCENARY_CAKE)
+			else if(scenary[j][caperucitaPosition.x] == SCENARY_CAKE)
 				this.cantidadTortasAbajo++;
-			else if(scenary[j][caperucitaPosition.y]== SCENARY_TREE) {
-				distanciaArbolAbajo = j - caperucitaPosition.y;
+			else if(scenary[j][caperucitaPosition.x]== SCENARY_TREE) {
+				distanciaArbolAbajo = j - caperucitaPosition.y - 1;
 				break;
 			}
 		}
@@ -157,6 +149,29 @@ public class CaperucitaPerception extends Perception {
 		res += "\n- distanciaArbolIzquierda: " + distanciaArbolIzquierda;
 
 		return res;
+	}
+
+	public CaperucitaPerception clone() {
+		CaperucitaPerception newCaperucitaPerception = new CaperucitaPerception();
+
+		newCaperucitaPerception.cantidadTortasArriba = this.cantidadTortasArriba;
+		newCaperucitaPerception.cantidadTortasDerecha = this.cantidadTortasDerecha;
+		newCaperucitaPerception.cantidadTortasIzquierda = this.cantidadTortasIzquierda;
+		newCaperucitaPerception.cantidadTortasAbajo = this.cantidadTortasAbajo;
+		newCaperucitaPerception.hayFloresArriba = this.hayFloresArriba;
+		newCaperucitaPerception.hayFloresDerecha = this.hayFloresDerecha;
+		newCaperucitaPerception.hayFloresIzquierda = this.hayFloresIzquierda;
+		newCaperucitaPerception.hayFloresAbajo = this.hayFloresAbajo;
+		newCaperucitaPerception.hayLoboArriba = this.hayLoboArriba;
+		newCaperucitaPerception.hayLoboDerecha = this.hayLoboDerecha;
+		newCaperucitaPerception.hayLoboIzquierda = this.hayLoboIzquierda;
+		newCaperucitaPerception.hayLoboAbajo = this.hayLoboAbajo;
+		newCaperucitaPerception.distanciaArbolArriba = this.distanciaArbolArriba;
+		newCaperucitaPerception.distanciaArbolDerecha = this.distanciaArbolDerecha;
+		newCaperucitaPerception.distanciaArbolIzquierda = this.distanciaArbolIzquierda;
+		newCaperucitaPerception.distanciaArbolAbajo = this.distanciaArbolAbajo;
+
+		return newCaperucitaPerception;
 	}
 
 	public int getCantidadTortasArriba() {
@@ -284,10 +299,4 @@ public class CaperucitaPerception extends Perception {
 	}
 
 	public void setDistanciaArbolIzquierda(int distanciaArbolIzquierda) { this.distanciaArbolIzquierda = distanciaArbolIzquierda; }
-
-	public Point getCaperucitaPosition() { return caperucitaPosition; }
-
-	public void setCaperucitaPosition(Point caperucitaPosition) { this.caperucitaPosition = caperucitaPosition;	}
-
-
 }

@@ -4,18 +4,36 @@ import frsf.cidisi.faia.agent.search.SearchAction;
 import frsf.cidisi.faia.agent.search.SearchBasedAgentState;
 import frsf.cidisi.faia.state.AgentState;
 import frsf.cidisi.faia.state.EnvironmentState;
+import model.CaperucitaEnvironmentState;
+import model.CaperucitaPerception;
+import model.CaperucitaState;
+
+import java.awt.*;
+
+import static constants.Constants.SCENARY_CAKE;
 
 public class GoLeft extends SearchAction {
 
-	public static int SCENARY_TREE = 1;
-	public static int SCENARY_CAKE = 2;
-	public static int SCENARY_WOLF = 3;
-	public static int SCENARY_FLOWER = 4;
-
 	@Override
-	public SearchBasedAgentState execute(SearchBasedAgentState s) {
-		// TODO Auto-generated method stub
-		return null;
+	public CaperucitaState execute(SearchBasedAgentState s) {
+		CaperucitaState caperucitaState = (CaperucitaState) s;
+		Point posicionActual = caperucitaState.getPosicionActual();
+		CaperucitaPerception perceptionActual = caperucitaState.getPerceptionActual();
+
+		if (caperucitaState.getPerceptionActual().getHayLoboIzquierda() == 1) {
+			//caperucitaState.deathRespawn();
+			return null;
+		} else {
+			caperucitaState.setPosicionActual(new Point(
+							posicionActual.x - perceptionActual.getDistanciaArbolIzquierda(),
+							posicionActual.y
+					)
+			);
+
+			caperucitaState.setTortas(caperucitaState.getTortas() + perceptionActual.getCantidadTortasIzquierda());
+		}
+
+		return caperucitaState;
 	}
 
 	@Override
@@ -25,14 +43,37 @@ public class GoLeft extends SearchAction {
 
 	@Override
 	public EnvironmentState execute(AgentState ast, EnvironmentState est) {
-		// TODO Auto-generated method stub
-		return null;
+		CaperucitaEnvironmentState caperucitaEnvironment = (CaperucitaEnvironmentState) est;
+		CaperucitaState caperucitaState = (CaperucitaState) ast;
+		Point posicionActual = caperucitaState.getPosicionActual();
+		CaperucitaPerception perceptionActual = caperucitaState.getPerceptionActual();
+		int distanciaIzquierda = perceptionActual.getDistanciaArbolIzquierda();
+
+		if (caperucitaState.getPerceptionActual().getHayLoboIzquierda() == 1) {
+			//caperucitaState.deathRespawn();
+			//caperucitaEnvironment.setScenary(caperucitaEnvironment.getInicialScenary());
+			return null;
+		} else {
+			caperucitaState.setPosicionActual(new Point(
+							posicionActual.x - distanciaIzquierda,
+							posicionActual.y
+					)
+			);
+
+			caperucitaState.setTortas(caperucitaState.getTortas() + perceptionActual.getCantidadTortasIzquierda());
+
+			caperucitaEnvironment.setCaperucitaPosition(caperucitaState.getPosicionActual());
+			for(int i = posicionActual.x ; i >= posicionActual.x - distanciaIzquierda ; i--)
+				if(caperucitaEnvironment.getForest()[posicionActual.y][i] == SCENARY_CAKE)
+					caperucitaEnvironment.getForest()[posicionActual.y][i] = 0;
+		}
+
+		return caperucitaEnvironment;
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return null;
+		return "irIzquierda";
 	}
 
 }

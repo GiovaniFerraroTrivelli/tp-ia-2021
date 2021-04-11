@@ -2,11 +2,12 @@ package model;
 
 import frsf.cidisi.faia.agent.Perception;
 import frsf.cidisi.faia.environment.Environment;
+import scenary.Scenary;
 
 public class CaperucitaEnvironment extends Environment {
 
-    public CaperucitaEnvironment() {
-        this.environmentState = new CaperucitaEnvironmentState();
+    public CaperucitaEnvironment(Scenary scenary) {
+        this.environmentState = new CaperucitaEnvironmentState(scenary);
     }
 
     public CaperucitaEnvironmentState getEnvironmentState() {
@@ -15,7 +16,11 @@ public class CaperucitaEnvironment extends Environment {
 
     @Override
     public Perception getPercept() {
-        return new CaperucitaPerception();
+        return new CaperucitaPerception(null, this);
+    }
+
+    public String toString() {
+        return environmentState.toString();
     }
 
 }
