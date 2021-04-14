@@ -9,7 +9,7 @@ import scenary.Scenary1;
 
 public class CaperucitaMain {
 
-	public static void main(String[] args) throws PrologConnectorException {
+	public static void main(String[] args) {
 		Scenary scenary = new Scenary1();
 
 		Caperucita agent = new Caperucita(scenary);

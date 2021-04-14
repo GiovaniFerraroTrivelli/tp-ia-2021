@@ -11,7 +11,7 @@ public class CaperucitaGoal extends GoalTest {
 		//System.out.println(agentState);
 		CaperucitaState caperucitaState = (CaperucitaState) agentState;
 		//
-		return (caperucitaState.getTortas() == 2 && caperucitaState.getFlowersPositions().stream()
+		return (/*caperucitaState.getTortas() == 2 && */caperucitaState.getFlowersPositions().stream()
 				.anyMatch(point ->
 						point.x == caperucitaState.getPosicionActual().x &&
 						point.y == caperucitaState.getPosicionActual().y)

@@ -7,21 +7,31 @@ import scenary.Scenary;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static constants.Constants.SCENARY_HEIGHT;
+import static constants.Constants.SCENARY_WIDTH;
 import static java.util.stream.Collectors.toList;
 
 public class CaperucitaState extends SearchBasedAgentState {
     private Point posicionActual;
     private Integer vidas;
     private Integer tortas;
-    private CaperucitaPerception perceptionActual;
     private ArrayList<Point> flowersPositions;
 
+    private int[] filaActual;
+    private int[] columnaActual;
+
     private Point POSICION_INICIAL;
+    private Scenary scenary;
 
     public CaperucitaState() {
     }
 
     public CaperucitaState(Scenary scenary) {
+        this.scenary = scenary;
+
+        this.filaActual = new int[SCENARY_WIDTH];
+        this.columnaActual = new int[SCENARY_HEIGHT];
+
         this.flowersPositions = scenary.getFlowersPosition();
         this.posicionActual = scenary.getCaperucitaPosition();
         this.POSICION_INICIAL = scenary.getCaperucitaPosition();
@@ -33,22 +43,23 @@ public class CaperucitaState extends SearchBasedAgentState {
     public boolean equals(Object obj) {
         CaperucitaState estadoComparado = (CaperucitaState) obj;
 
-        if (estadoComparado.posicionActual.x != this.posicionActual.x ||
-                estadoComparado.posicionActual.y != this.posicionActual.y)
-            return false;
-        if (!estadoComparado.vidas.equals(this.vidas))
-            return false;
-        else return estadoComparado.tortas.equals(this.tortas);
+        boolean posicionX = estadoComparado.posicionActual.x == this.posicionActual.x;
+        boolean posicionY = estadoComparado.posicionActual.y == this.posicionActual.y;
+        boolean vidas = estadoComparado.vidas.equals(this.vidas);
+        boolean tortas = estadoComparado.tortas.equals(this.tortas);
+
+        return (posicionX && posicionY && vidas && tortas);
     }
 
     @Override
     public SearchBasedAgentState clone() {
-        CaperucitaState caperucitaState = new CaperucitaState();
-        caperucitaState.flowersPositions = (ArrayList<Point>) this.flowersPositions.stream().map(Point::new).collect(toList());
+        CaperucitaState caperucitaState = new CaperucitaState(this.scenary);
+        caperucitaState.flowersPositions = this.flowersPositions;
         caperucitaState.vidas = this.vidas;
         caperucitaState.tortas = this.tortas;
+        System.arraycopy(this.filaActual, 0, caperucitaState.filaActual, 0, this.filaActual.length);
+        System.arraycopy(this.columnaActual, 0, caperucitaState.columnaActual, 0, this.columnaActual.length);
         caperucitaState.posicionActual = new Point(this.posicionActual.x, this.posicionActual.y);
-        caperucitaState.perceptionActual = this.perceptionActual.clone();
 
         return caperucitaState;
     }
@@ -56,7 +67,15 @@ public class CaperucitaState extends SearchBasedAgentState {
     @Override
     public void updateState(Perception p) {
         CaperucitaPerception perception = (CaperucitaPerception) p;
-        this.perceptionActual = perception;
+
+        this.filaActual = perception.getScenary()[this.posicionActual.y];
+
+        for(int i = 0; i < SCENARY_HEIGHT; i++) {
+            this.columnaActual[i] = perception.getScenary()[i][this.posicionActual.x];
+        }
+
+        /*this.filaActual = perception.getFilaActual();
+        this.columnaActual = perception.getColumnaActual();*/
     }
 
     @Override
@@ -100,20 +119,28 @@ public class CaperucitaState extends SearchBasedAgentState {
         this.setVidas(this.vidas - 1);
     }
 
-    public CaperucitaPerception getPerceptionActual() {
-        return perceptionActual;
-    }
-
-    public void setPerceptionActual(CaperucitaPerception perceptionActual) {
-        this.perceptionActual = perceptionActual;
-    }
-
     public Point getPosicionInicial() {
         return POSICION_INICIAL;
     }
 
     public ArrayList<Point> getFlowersPositions() {
         return flowersPositions;
+    }
+
+    public int[] getFilaActual() {
+        return filaActual;
+    }
+
+    public void setFilaActual(int[] filaActual) {
+        this.filaActual = filaActual;
+    }
+
+    public int[] getColumnaActual() {
+        return columnaActual;
+    }
+
+    public void setColumnaActual(int[] columnaActual) {
+        this.columnaActual = columnaActual;
     }
 
     public void setFlowersPositions(ArrayList<Point> flowersPositions) {

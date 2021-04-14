@@ -12,5 +12,5 @@ public class Constants {
     public static final int SCENARY_WIDTH = 20;
     public static final int SCENARY_HEIGHT = 20;
 
-    public static final int MAX_TORTAS = 6;
+    public static final int MAX_TORTAS = 3;
 }

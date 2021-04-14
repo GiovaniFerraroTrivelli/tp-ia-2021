@@ -10,7 +10,7 @@ import model.CaperucitaState;
 
 import java.awt.*;
 
-import static constants.Constants.SCENARY_CAKE;
+import static constants.Constants.*;
 
 public class GoDown extends SearchAction {
 
@@ -18,18 +18,25 @@ public class GoDown extends SearchAction {
     public SearchBasedAgentState execute(SearchBasedAgentState s) {
         CaperucitaState caperucitaState = (CaperucitaState) s;
         Point posicionActual = caperucitaState.getPosicionActual();
-        CaperucitaPerception perceptionActual = caperucitaState.getPerceptionActual();
+        int[] columnaActual = new int[SCENARY_HEIGHT];
+        columnaActual = caperucitaState.getColumnaActual();
 
-        if (caperucitaState.getPerceptionActual().getHayLoboAbajo() == 1) {
-            //caperucitaState.deathRespawn();
-            return null;
-        } else {
-            caperucitaState.setPosicionActual(new Point(
-                            posicionActual.x,
-                            posicionActual.y + perceptionActual.getDistanciaArbolAbajo()
-                    )
-            );
-            caperucitaState.setTortas(caperucitaState.getTortas() + perceptionActual.getCantidadTortasAbajo());
+        boolean sigueRecorriendo = true;
+        for(int i = posicionActual.y; i < SCENARY_HEIGHT; i++) {
+            switch(columnaActual[i]) {
+                case SCENARY_CAKE -> caperucitaState.setTortas(caperucitaState.getTortas() + 1);
+                case SCENARY_TREE -> {
+                    caperucitaState.setPosicionActual(new Point(posicionActual.x, i - 1));
+                    sigueRecorriendo = false;
+                }
+                case SCENARY_FLOWER -> {}
+                case SCENARY_WOLF -> {
+                    return null;
+                }
+            }
+
+            if(!sigueRecorriendo)
+                break;
         }
 
         return caperucitaState;
@@ -45,25 +52,23 @@ public class GoDown extends SearchAction {
         CaperucitaEnvironmentState caperucitaEnvironment = (CaperucitaEnvironmentState) est;
         CaperucitaState caperucitaState = (CaperucitaState) ast;
         Point posicionActual = caperucitaState.getPosicionActual();
-        CaperucitaPerception perceptionActual = caperucitaState.getPerceptionActual();
-        int distanciaAbajo = perceptionActual.getDistanciaArbolAbajo();
+        int[] columnaActual = new int[SCENARY_HEIGHT];
+        columnaActual = caperucitaState.getColumnaActual();
 
-        if (caperucitaState.getPerceptionActual().getHayLoboAbajo() == 1) {
-            //caperucitaState.deathRespawn();
-            //caperucitaEnvironment.setScenary(caperucitaEnvironment.getInicialScenary());
-            return null;
-        } else {
-            caperucitaState.setPosicionActual(new Point(
-                            posicionActual.x,
-                            posicionActual.y + distanciaAbajo
-                    )
-            );
-            caperucitaState.setTortas(caperucitaState.getTortas() + perceptionActual.getCantidadTortasAbajo());
+        int[][] scenary = caperucitaEnvironment.getCurrentForest();
 
-            caperucitaEnvironment.setCaperucitaPosition(caperucitaState.getPosicionActual());
-            for(int i = posicionActual.y ; i <= posicionActual.y + distanciaAbajo ; i++)
-                if(caperucitaEnvironment.getForest()[i][posicionActual.x] == SCENARY_CAKE)
-                    caperucitaEnvironment.getForest()[i][posicionActual.x] = 0;
+        boolean sigueRecorriendo = true;
+        for(int i = posicionActual.y; i < SCENARY_HEIGHT; i++) {
+            switch(columnaActual[i]) {
+                case SCENARY_CAKE -> {
+                    scenary[i][posicionActual.x] = 0;
+                    caperucitaEnvironment.setScenary(scenary);
+                }
+                case SCENARY_TREE, SCENARY_FLOWER -> {}
+                case SCENARY_WOLF -> {
+                    return null;
+                }
+            }
         }
 
         return caperucitaEnvironment;

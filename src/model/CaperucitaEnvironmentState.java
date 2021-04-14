@@ -48,6 +48,14 @@ public class CaperucitaEnvironmentState extends EnvironmentState {
         return INITIAL_FOREST;
     }
 
+    public int[][] getCurrentForest() {
+        return currentForest;
+    }
+
+    public void setCurrentForest(int[][] currentForest) {
+        this.currentForest = currentForest;
+    }
+
     @Override
     public void initState() {
     }

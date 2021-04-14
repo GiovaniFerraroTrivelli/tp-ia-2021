@@ -1,3 +1,4 @@
+/*
 package main;
 
 import frsf.cidisi.faia.solver.search.IEstimatedCostFunction;
@@ -12,3 +13,4 @@ public class Heuristic implements IEstimatedCostFunction {
         return ag.getTortas();
     }
 }
+*/
