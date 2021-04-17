@@ -18,9 +18,12 @@ public class GoRight extends SearchAction {
     public SearchBasedAgentState execute(SearchBasedAgentState s) {
         CaperucitaState caperucitaState = (CaperucitaState) s;
         Point posicionActual = caperucitaState.getPosicionActual();
-        int[] filaActual = new int[SCENARY_HEIGHT];
-        filaActual = caperucitaState.getFilaActual();
+        int[] filaActual = caperucitaState.getRow();
 
+        if (filaActual[posicionActual.x + 1] == SCENARY_TREE)
+            return null;
+
+        int[] newRow = new int[SCENARY_WIDTH];
         boolean sigueRecorriendo = true;
         for(int i = posicionActual.x; i < SCENARY_WIDTH; i++) {
             switch(filaActual[i]) {
@@ -28,17 +31,27 @@ public class GoRight extends SearchAction {
                 case SCENARY_TREE -> {
                     caperucitaState.setPosicionActual(new Point(i - 1, posicionActual.y));
                     sigueRecorriendo = false;
+                    newRow[i] = SCENARY_TREE;
                 }
-                case SCENARY_FLOWER -> {}
+                case SCENARY_FLOWER -> {
+                    newRow[i] = SCENARY_FLOWER;
+                    caperucitaState.setPosicionActual(new Point(i, posicionActual.y));
+                    sigueRecorriendo = false;
+                }
                 case SCENARY_WOLF -> {
                     return null;
                 }
             }
 
-            if(!sigueRecorriendo)
+            if (!sigueRecorriendo)
                 break;
         }
 
+        if(sigueRecorriendo) {
+            caperucitaState.setPosicionActual(new Point(SCENARY_WIDTH - 2, posicionActual.y));
+        }
+
+        caperucitaState.updateRow(newRow, true);
         return caperucitaState;
     }
 
@@ -52,8 +65,7 @@ public class GoRight extends SearchAction {
         CaperucitaEnvironmentState caperucitaEnvironment = (CaperucitaEnvironmentState) est;
         CaperucitaState caperucitaState = (CaperucitaState) ast;
         Point posicionActual = caperucitaState.getPosicionActual();
-        int[] filaActual = new int[SCENARY_HEIGHT];
-        filaActual = caperucitaState.getFilaActual();
+        int[] filaActual = caperucitaState.getRow();
 
         int[][] scenary = caperucitaEnvironment.getCurrentForest();
 
@@ -64,11 +76,17 @@ public class GoRight extends SearchAction {
                     scenary[posicionActual.y][i] = 0;
                     caperucitaEnvironment.setScenary(scenary);
                 }
-                case SCENARY_TREE, SCENARY_FLOWER -> {}
+                case SCENARY_TREE -> {
+                    sigueRecorriendo = false;
+                }
+                case SCENARY_FLOWER -> {}
                 case SCENARY_WOLF -> {
                     return null;
                 }
             }
+
+            if(!sigueRecorriendo)
+                break;
         }
 
         return caperucitaEnvironment;

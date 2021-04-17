@@ -7,9 +7,7 @@ import scenary.Scenary;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static constants.Constants.SCENARY_HEIGHT;
-import static constants.Constants.SCENARY_WIDTH;
-import static java.util.stream.Collectors.toList;
+import static constants.Constants.*;
 
 public class CaperucitaState extends SearchBasedAgentState {
     private Point posicionActual;
@@ -17,24 +15,29 @@ public class CaperucitaState extends SearchBasedAgentState {
     private Integer tortas;
     private ArrayList<Point> flowersPositions;
 
-    private int[] filaActual;
-    private int[] columnaActual;
+    private int[][] knownScenary;
 
     private Point POSICION_INICIAL;
     private Scenary scenary;
 
     public CaperucitaState() {
+        this.knownScenary = new int[SCENARY_HEIGHT][SCENARY_WIDTH];
     }
 
     public CaperucitaState(Scenary scenary) {
         this.scenary = scenary;
 
-        this.filaActual = new int[SCENARY_WIDTH];
-        this.columnaActual = new int[SCENARY_HEIGHT];
-
         this.flowersPositions = scenary.getFlowersPosition();
         this.posicionActual = scenary.getCaperucitaPosition();
         this.POSICION_INICIAL = scenary.getCaperucitaPosition();
+
+        this.knownScenary = new int[SCENARY_HEIGHT][SCENARY_WIDTH];
+
+        for(Point flowerPosition: flowersPositions) {
+            this.knownScenary[flowerPosition.y][flowerPosition.x] = SCENARY_FLOWER;
+        }
+
+        this.knownScenary[posicionActual.y][posicionActual.x] = SCENARY_CAPERUCITA;
 
         this.initState();
     }
@@ -43,22 +46,39 @@ public class CaperucitaState extends SearchBasedAgentState {
     public boolean equals(Object obj) {
         CaperucitaState estadoComparado = (CaperucitaState) obj;
 
+        boolean sameScenary = true;
+
+        for (int i = 0; i < SCENARY_HEIGHT; i++) {
+            for (int j = 0; j < SCENARY_WIDTH; j++) {
+                if(knownScenary[i][j] != estadoComparado.knownScenary[i][j]) {
+                    sameScenary = false;
+                    break;
+                }
+            }
+
+            if(!sameScenary)
+                break;
+        }
+
         boolean posicionX = estadoComparado.posicionActual.x == this.posicionActual.x;
         boolean posicionY = estadoComparado.posicionActual.y == this.posicionActual.y;
         boolean vidas = estadoComparado.vidas.equals(this.vidas);
         boolean tortas = estadoComparado.tortas.equals(this.tortas);
 
-        return (posicionX && posicionY && vidas && tortas);
+        return (sameScenary && posicionX && posicionY && vidas && tortas);
     }
 
     @Override
     public SearchBasedAgentState clone() {
-        CaperucitaState caperucitaState = new CaperucitaState(this.scenary);
+        CaperucitaState caperucitaState = new CaperucitaState();
         caperucitaState.flowersPositions = this.flowersPositions;
         caperucitaState.vidas = this.vidas;
         caperucitaState.tortas = this.tortas;
-        System.arraycopy(this.filaActual, 0, caperucitaState.filaActual, 0, this.filaActual.length);
-        System.arraycopy(this.columnaActual, 0, caperucitaState.columnaActual, 0, this.columnaActual.length);
+
+        for (int i = 0; i < SCENARY_HEIGHT; i++) {
+            caperucitaState.knownScenary[i] = this.knownScenary[i].clone();
+        }
+
         caperucitaState.posicionActual = new Point(this.posicionActual.x, this.posicionActual.y);
 
         return caperucitaState;
@@ -68,19 +88,57 @@ public class CaperucitaState extends SearchBasedAgentState {
     public void updateState(Perception p) {
         CaperucitaPerception perception = (CaperucitaPerception) p;
 
-        this.filaActual = perception.getScenary()[this.posicionActual.y];
+        int[] filaActual = perception.getFilaActual();
 
-        for(int i = 0; i < SCENARY_HEIGHT; i++) {
-            this.columnaActual[i] = perception.getScenary()[i][this.posicionActual.x];
+        for (int i = this.posicionActual.x; i < SCENARY_WIDTH; i++) {
+            this.knownScenary[this.posicionActual.y][i] = filaActual[i];
+
+            if(filaActual[i] == SCENARY_TREE) {
+                break;
+            }
         }
 
-        /*this.filaActual = perception.getFilaActual();
-        this.columnaActual = perception.getColumnaActual();*/
+        for (int i = this.posicionActual.x; i >= 0; i--) {
+            this.knownScenary[this.posicionActual.y][i] = filaActual[i];
+
+            if(filaActual[i] == SCENARY_TREE) {
+                break;
+            }
+        }
+
+        int[] columnaActual = perception.getColumnaActual();
+        for (int i = this.posicionActual.y; i < SCENARY_HEIGHT; i++) {
+            this.knownScenary[i][this.posicionActual.x] = columnaActual[i];
+
+            if(columnaActual[i] == SCENARY_TREE) {
+                break;
+            }
+        }
+
+        for (int i = this.posicionActual.y; i >= 0; i--) {
+            this.knownScenary[i][this.posicionActual.x] = columnaActual[i];
+
+            if(columnaActual[i] == SCENARY_TREE) {
+                break;
+            }
+        }
+
+        System.out.println("HOLA");
     }
 
     @Override
     public String toString() {
-        return "Estado Caperucita [x=" + this.posicionActual.x + ", y=" + this.posicionActual.y + "] [tortas=" + this.tortas + ", vidas=" + this.vidas + "]";
+        StringBuilder matrix = new StringBuilder();
+        matrix.append("Estado Caperucita [x=" + this.posicionActual.x + ", y=" + this.posicionActual.y + "] [tortas=" + this.tortas + ", vidas=" + this.vidas + "]\n\n");
+
+        for (int i = 0; i < SCENARY_HEIGHT; i++) {
+            matrix.append("\n").append(this.knownScenary[i][0]);
+            for (int j = 1; j < SCENARY_WIDTH; j++) {
+                matrix.append(" ").append(this.knownScenary[i][j]);
+            }
+        }
+
+        return matrix.toString();
     }
 
     @Override
@@ -127,24 +185,70 @@ public class CaperucitaState extends SearchBasedAgentState {
         return flowersPositions;
     }
 
-    public int[] getFilaActual() {
-        return filaActual;
-    }
-
-    public void setFilaActual(int[] filaActual) {
-        this.filaActual = filaActual;
-    }
-
-    public int[] getColumnaActual() {
-        return columnaActual;
-    }
-
-    public void setColumnaActual(int[] columnaActual) {
-        this.columnaActual = columnaActual;
-    }
-
     public void setFlowersPositions(ArrayList<Point> flowersPositions) {
         this.flowersPositions = flowersPositions;
     }
 
+    public int[][] getKnownScenary() {
+        return knownScenary;
+    }
+
+    public void setKnownScenary(int[][] knownScenary) {
+        this.knownScenary = knownScenary;
+    }
+
+    public void updateRow(int[] row, boolean positive) {
+        if(positive) {
+            for (int i = this.posicionActual.x; i < SCENARY_WIDTH; i++) {
+                this.knownScenary[this.posicionActual.y][i] = row[i];
+
+                if (row[i] == SCENARY_TREE) {
+                    break;
+                }
+            }
+        }
+        else {
+            for (int i = this.posicionActual.x; i >= 0; i--) {
+                this.knownScenary[this.posicionActual.y][i] = row[i];
+
+                if (row[i] == SCENARY_TREE) {
+                    break;
+                }
+            }
+        }
+    }
+
+    public void updateColumn(int[] column, boolean positive) {
+        if(positive) {
+            for (int i = this.posicionActual.y; i < SCENARY_HEIGHT; i++) {
+                this.knownScenary[i][this.posicionActual.x] = column[i];
+
+                if(column[i] == SCENARY_TREE) {
+                    break;
+                }
+            }
+        }
+        else {
+            for (int i = this.posicionActual.y; i >= 0; i--) {
+                this.knownScenary[i][this.posicionActual.x] = column[i];
+
+                if (column[i] == SCENARY_TREE) {
+                    break;
+                }
+            }
+        }
+    }
+
+    public int[] getRow() {
+        return this.knownScenary[this.posicionActual.y];
+    }
+
+    public int[] getColumn() {
+        int[] column = new int[SCENARY_HEIGHT];
+        for (int i = 0; i < SCENARY_HEIGHT; i++) {
+            column[i] = this.knownScenary[i][this.posicionActual.x];
+        }
+
+        return column;
+    }
 }

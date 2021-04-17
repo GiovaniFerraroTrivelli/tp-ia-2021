@@ -8,10 +8,8 @@ import java.awt.*;
 import static constants.Constants.*;
 
 public class CaperucitaPerception extends Perception {
-	private Point caperucitaPosition;
-	/*private int[] filaActual = new int[SCENARY_WIDTH];
-	private int[] columnaActual = new int[SCENARY_HEIGHT];*/
-	private int[][] scenary = new int[SCENARY_WIDTH][SCENARY_HEIGHT];
+	private int[] filaActual = new int[SCENARY_WIDTH];
+	private int[] columnaActual = new int[SCENARY_HEIGHT];
 
 	public CaperucitaPerception() {
 
@@ -25,13 +23,12 @@ public class CaperucitaPerception extends Perception {
 	@Override
 	public void initPerception(Agent agent, Environment environment) {
 		CaperucitaEnvironment caperucitaEnvironment = (CaperucitaEnvironment) environment;
-		//int[][] scenary = caperucitaEnvironment.getEnvironmentState().getForest();
-		this.scenary = caperucitaEnvironment.getEnvironmentState().getForest();
+		int[][] scenary = caperucitaEnvironment.getEnvironmentState().getForest();
+		this.filaActual = scenary[caperucitaEnvironment.getEnvironmentState().getCaperucitaPosition().y].clone();
 
-		this.caperucitaPosition = caperucitaEnvironment.getEnvironmentState().getCaperucitaPosition();
-
-		/*this.filaActual = scenary[caperucitaPosition.y];
-		this.columnaActual = scenary[caperucitaPosition.x];*/
+		for (int i = 0; i < SCENARY_HEIGHT; i++) {
+			this.columnaActual[i] = scenary[i][caperucitaEnvironment.getEnvironmentState().getCaperucitaPosition().x];
+		}
 	}
 
 	@Override
@@ -40,33 +37,15 @@ public class CaperucitaPerception extends Perception {
 	}
 
 	public CaperucitaPerception clone() {
-		CaperucitaPerception newCaperucitaPerception = new CaperucitaPerception();
-		newCaperucitaPerception.setCaperucitaPosition(new Point(this.caperucitaPosition.x, this.caperucitaPosition.y));
+		CaperucitaPerception ncp = new CaperucitaPerception();
 
-		for(int i = 0; i < SCENARY_HEIGHT; i++) {
-			System.arraycopy(this.scenary[i], 0, newCaperucitaPerception.scenary[i], 0, SCENARY_WIDTH);
-		}
+		ncp.filaActual = this.filaActual.clone();
+		ncp.columnaActual = this.columnaActual.clone();
 
-		return newCaperucitaPerception;
+		return ncp;
 	}
 
-	public Point getCaperucitaPosition() {
-		return caperucitaPosition;
-	}
-
-	public void setCaperucitaPosition(Point caperucitaPosition) {
-		this.caperucitaPosition = caperucitaPosition;
-	}
-
-	public int[][] getScenary() {
-		return scenary;
-	}
-
-	public void setScenary(int[][] scenary) {
-		this.scenary = scenary;
-	}
-
-	/*public int[] getFilaActual() {
+	public int[] getFilaActual() {
 		return filaActual;
 	}
 
@@ -80,5 +59,5 @@ public class CaperucitaPerception extends Perception {
 
 	public void setColumnaActual(int[] columnaActual) {
 		this.columnaActual = columnaActual;
-	}*/
+	}
 }

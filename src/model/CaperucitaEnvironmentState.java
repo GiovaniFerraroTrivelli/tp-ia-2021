@@ -62,15 +62,15 @@ public class CaperucitaEnvironmentState extends EnvironmentState {
 
     @Override
     public String toString() {
-        StringBuilder matrix = new StringBuilder();
+        /*StringBuilder matrix = new StringBuilder();
 
         for (int i = 0; i < SCENARY_HEIGHT; i++) {
             matrix.append("\n").append(currentForest[i][0]);
             for (int j = 1; j < SCENARY_WIDTH; j++) {
                 matrix.append(" ").append(currentForest[i][j]);
             }
-        }
+        }*/
 
-        return matrix.toString();
+        return ":v";//matrix.toString();
     }
 }

@@ -18,27 +18,42 @@ public class GoUp extends SearchAction {
     public SearchBasedAgentState execute(SearchBasedAgentState s) {
         CaperucitaState caperucitaState = (CaperucitaState) s;
         Point posicionActual = caperucitaState.getPosicionActual();
-        int[] columnaActual = new int[SCENARY_HEIGHT];
-        columnaActual = caperucitaState.getColumnaActual();
 
+        int[] columnaActual = caperucitaState.getColumn();
+
+        if (columnaActual[posicionActual.y - 1] == SCENARY_TREE)
+            return null;
+
+        int[] newColumn = new int[SCENARY_HEIGHT];
         boolean sigueRecorriendo = true;
-        for(int i = posicionActual.y; i >= 0; i--) {
-            switch(columnaActual[i]) {
+
+        for (int i = posicionActual.y; i >= 0; i--) {
+            switch (columnaActual[i]) {
                 case SCENARY_CAKE -> caperucitaState.setTortas(caperucitaState.getTortas() + 1);
                 case SCENARY_TREE -> {
                     caperucitaState.setPosicionActual(new Point(posicionActual.x, i + 1));
                     sigueRecorriendo = false;
+                    newColumn[i] = SCENARY_TREE;
                 }
-                case SCENARY_FLOWER -> {}
+                case SCENARY_FLOWER -> {
+                    newColumn[i] = SCENARY_FLOWER;
+                    caperucitaState.setPosicionActual(new Point(posicionActual.x, i));
+                    sigueRecorriendo = false;
+                }
                 case SCENARY_WOLF -> {
                     return null;
                 }
             }
 
-            if(!sigueRecorriendo)
+            if (!sigueRecorriendo)
                 break;
         }
 
+        if(sigueRecorriendo) {
+            caperucitaState.setPosicionActual(new Point(posicionActual.x, 1));
+        }
+
+        caperucitaState.updateColumn(newColumn, false);
         return caperucitaState;
     }
 
@@ -52,23 +67,29 @@ public class GoUp extends SearchAction {
         CaperucitaEnvironmentState caperucitaEnvironment = (CaperucitaEnvironmentState) est;
         CaperucitaState caperucitaState = (CaperucitaState) ast;
         Point posicionActual = caperucitaState.getPosicionActual();
-        int[] columnaActual = new int[SCENARY_HEIGHT];
-        columnaActual = caperucitaState.getFilaActual();
+        int[] columnaActual = caperucitaState.getColumn();
 
         int[][] scenary = caperucitaEnvironment.getCurrentForest();
 
         boolean sigueRecorriendo = true;
-        for(int i = posicionActual.y; i >= 0; i--) {
-            switch(columnaActual[i]) {
+        for (int i = posicionActual.y; i >= 0; i--) {
+            switch (columnaActual[i]) {
                 case SCENARY_CAKE -> {
                     scenary[i][posicionActual.x] = 0;
                     caperucitaEnvironment.setScenary(scenary);
                 }
-                case SCENARY_TREE, SCENARY_FLOWER -> {}
+                case SCENARY_TREE -> {
+                    sigueRecorriendo = false;
+                }
+                case SCENARY_FLOWER -> {
+                }
                 case SCENARY_WOLF -> {
                     return null;
                 }
             }
+            
+            if (!sigueRecorriendo)
+                break;
         }
 
         return caperucitaEnvironment;
