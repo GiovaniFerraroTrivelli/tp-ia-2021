@@ -1,11 +1,9 @@
 package main;
 
-import frsf.cidisi.faia.exceptions.PrologConnectorException;
 import frsf.cidisi.faia.simulator.SearchBasedAgentSimulator;
-import model.CaperucitaEnvironment;
 import model.Caperucita;
+import model.CaperucitaEnvironment;
 import scenary.Scenary;
-import scenary.Scenary1;
 import scenary.Scenary2;
 
 public class CaperucitaMain {
@@ -20,5 +18,4 @@ public class CaperucitaMain {
 		
 		simulator.start();
 	}
-
 }

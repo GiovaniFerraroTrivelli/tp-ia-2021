@@ -27,7 +27,10 @@ public class GoRight extends SearchAction {
         boolean sigueRecorriendo = true;
         for(int i = posicionActual.x; i < SCENARY_WIDTH; i++) {
             switch(filaActual[i]) {
-                case SCENARY_CAKE -> caperucitaState.setTortas(caperucitaState.getTortas() + 1);
+                case SCENARY_CAKE -> {
+                    caperucitaState.setTortas(caperucitaState.getTortas() + 1);
+                    newRow[i] = 0;
+                }
                 case SCENARY_TREE -> {
                     caperucitaState.setPosicionActual(new Point(i - 1, posicionActual.y));
                     sigueRecorriendo = false;
@@ -70,16 +73,27 @@ public class GoRight extends SearchAction {
         int[][] scenary = caperucitaEnvironment.getCurrentForest();
 
         boolean sigueRecorriendo = true;
-        for(int i = posicionActual.y; i < SCENARY_WIDTH; i++) {
+        for(int i = posicionActual.x; i < SCENARY_WIDTH; i++) {
             switch(filaActual[i]) {
                 case SCENARY_CAKE -> {
                     scenary[posicionActual.y][i] = 0;
                     caperucitaEnvironment.setScenary(scenary);
+                    caperucitaState.setTortas(caperucitaState.getTortas() + 1);
                 }
                 case SCENARY_TREE -> {
+                    Point posActual = new Point(i - 1, posicionActual.y);
+
+                    caperucitaState.setPosicionActual(posActual);
+                    caperucitaEnvironment.setCaperucitaPosition(posActual);
                     sigueRecorriendo = false;
                 }
-                case SCENARY_FLOWER -> {}
+                case SCENARY_FLOWER -> {
+                    Point posActual = new Point(i, posicionActual.y);
+
+                    caperucitaState.setPosicionActual(posActual);
+                    caperucitaEnvironment.setCaperucitaPosition(posActual);
+                    sigueRecorriendo = false;
+                }
                 case SCENARY_WOLF -> {
                     return null;
                 }

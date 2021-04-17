@@ -31,6 +31,7 @@ public class GoDown extends SearchAction {
             switch (columnaActual[i]) {
                 case SCENARY_CAKE -> {
                     caperucitaState.setTortas(caperucitaState.getTortas() + 1);
+                    newColumn[i] = 0;
                 }
                 case SCENARY_TREE -> {
                     caperucitaState.setPosicionActual(new Point(posicionActual.x, i - 1));
@@ -79,11 +80,21 @@ public class GoDown extends SearchAction {
                 case SCENARY_CAKE -> {
                     scenary[i][posicionActual.x] = 0;
                     caperucitaEnvironment.setScenary(scenary);
+                    caperucitaState.setTortas(caperucitaState.getTortas() + 1);
                 }
                 case SCENARY_TREE -> {
+                    Point posActual = new Point(posicionActual.x, i - 1);
+
+                    caperucitaState.setPosicionActual(posActual);
+                    caperucitaEnvironment.setCaperucitaPosition(posActual);
                     sigueRecorriendo = false;
                 }
                 case SCENARY_FLOWER -> {
+                    Point posActual = new Point(posicionActual.x, i);
+
+                    caperucitaState.setPosicionActual(posActual);
+                    caperucitaEnvironment.setCaperucitaPosition(posActual);
+                    sigueRecorriendo = false;
                 }
                 case SCENARY_WOLF -> {
                     return null;
