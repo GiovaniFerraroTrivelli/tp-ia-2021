@@ -11,8 +11,10 @@ public abstract class Scenary {
     protected Point wolfPosition;
     protected Point caperucitaPosition;
     protected Integer cakesTotal;
+    protected ArrayList<Point> wolfSpawnPoints = new ArrayList<>();
 
     public void initializeScenary(int[][] forest) {
+
         for (int i = 0; i < SCENARY_HEIGHT; i++) {
             for (int j = 0; j < SCENARY_WIDTH; j++) {
                 switch (forest[i][j]) {
@@ -20,6 +22,14 @@ public abstract class Scenary {
                     case SCENARY_FLOWER -> flowersPosition.add(new Point(j, i));
                     case SCENARY_CAPERUCITA -> caperucitaPosition = new Point(j, i);
                     case SCENARY_WOLF -> wolfPosition = new Point(j, i);
+                    case 0 -> {
+                        if ((i < SCENARY_HEIGHT - 1 && forest[i + 1][j] == SCENARY_TREE)
+                                || (j < SCENARY_WIDTH - 1 && forest[i][j + 1] == SCENARY_TREE)
+                                || (i > 0 && forest[i - 1][j] == SCENARY_TREE)
+                                || (j > 0 && forest[i][j - 1] == SCENARY_TREE)) {
+                            wolfSpawnPoints.add(new Point(j, i));
+                        }
+                    }
                 }
             }
         }
@@ -43,5 +53,13 @@ public abstract class Scenary {
 
     public Integer getCakesTotal() {
         return cakesTotal;
+    }
+
+    public ArrayList<Point> getWolfSpawnPoints() {
+        return wolfSpawnPoints;
+    }
+
+    public void setWolfSpawnPoints(ArrayList<Point> wolfSpawnPoints) {
+        this.wolfSpawnPoints = wolfSpawnPoints;
     }
 }

@@ -16,6 +16,7 @@ public class CaperucitaState extends SearchBasedAgentState {
     private ArrayList<Point> flowersPositions;
 
     private int[][] knownScenary;
+    private int[][] inicialKnownScenary;
 
     private Point POSICION_INICIAL;
     private Scenary scenary;
@@ -39,6 +40,7 @@ public class CaperucitaState extends SearchBasedAgentState {
 
         this.knownScenary[posicionActual.y][posicionActual.x] = SCENARY_CAPERUCITA;
 
+        this.inicialKnownScenary = this.knownScenary.clone();
         this.initState();
     }
 
@@ -250,5 +252,24 @@ public class CaperucitaState extends SearchBasedAgentState {
         }
 
         return column;
+    }
+
+    public int[][] getInicialKnownScenary() {
+        return inicialKnownScenary;
+    }
+
+    public void setInicialKnownScenary(int[][] inicialKnownScenary) {
+        this.inicialKnownScenary = inicialKnownScenary;
+    }
+
+    public void removeWolfFromForest() {
+        for (int i = 0; i < SCENARY_HEIGHT; i++) {
+            for (int j = 0; j < SCENARY_WIDTH; j++) {
+                if(this.knownScenary[i][j] == SCENARY_WOLF) {
+                    this.knownScenary[i][j] = 0;
+                    return;
+                }
+            }
+        }
     }
 }

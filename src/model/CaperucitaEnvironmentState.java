@@ -4,20 +4,25 @@ import frsf.cidisi.faia.state.EnvironmentState;
 import scenary.Scenary;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 
-import static constants.Constants.SCENARY_HEIGHT;
-import static constants.Constants.SCENARY_WIDTH;
+import static constants.Constants.*;
 
 public class CaperucitaEnvironmentState extends EnvironmentState {
     private final int[][] INITIAL_FOREST = new int[SCENARY_HEIGHT][SCENARY_WIDTH];
     private int[][] currentForest = INITIAL_FOREST;
     private Point wolfPosition;
     private Point caperucitaPosition;
+    private ArrayList<Point> wolfSpawnPoints;
+    private Point wolfInitialPosition;
 
     public CaperucitaEnvironmentState(Scenary scenary) {
         currentForest = scenary.getForest();
         wolfPosition = scenary.getWolfPosition();
         caperucitaPosition = scenary.getCaperucitaPosition();
+        wolfSpawnPoints = scenary.getWolfSpawnPoints();
+        wolfInitialPosition = new Point(wolfPosition.x, wolfPosition.y);
     }
 
     public int[][] getForest() {
@@ -56,21 +61,31 @@ public class CaperucitaEnvironmentState extends EnvironmentState {
         this.currentForest = currentForest;
     }
 
+    public void moveWolf() {
+        int[][] newForest = this.currentForest.clone();
+        newForest[this.wolfPosition.y][this.wolfPosition.x] = 0;
+        do {
+            this.wolfPosition = this.wolfSpawnPoints.get(new Random().nextInt(this.wolfSpawnPoints.size()));
+        }
+        while(this.wolfPosition.equals(this.caperucitaPosition));
+        newForest[this.wolfPosition.y][this.wolfPosition.x] = SCENARY_WOLF;
+        this.setScenary(newForest);
+    }
+
+    public Point getWolfInitialPosition() {
+        return wolfInitialPosition;
+    }
+
+    public void setWolfInitialPosition(Point wolfInitialPosition) {
+        this.wolfInitialPosition = wolfInitialPosition;
+    }
+
     @Override
     public void initState() {
     }
 
     @Override
     public String toString() {
-        /*StringBuilder matrix = new StringBuilder();
-
-        for (int i = 0; i < SCENARY_HEIGHT; i++) {
-            matrix.append("\n").append(currentForest[i][0]);
-            for (int j = 1; j < SCENARY_WIDTH; j++) {
-                matrix.append(" ").append(currentForest[i][j]);
-            }
-        }*/
-
-        return ":v";//matrix.toString();
+        return "Posicion Lobo [x=" + this.wolfPosition.x + ", y=" + this.wolfPosition.y + "]\n";
     }
 }

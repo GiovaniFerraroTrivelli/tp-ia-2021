@@ -97,13 +97,21 @@ public class GoDown extends SearchAction {
                     sigueRecorriendo = false;
                 }
                 case SCENARY_WOLF -> {
-                    return null;
+                    caperucitaState.setTortas(0);
+                    caperucitaState.setVidas(caperucitaState.getVidas() - 1);
+                    caperucitaState.setPosicionActual(caperucitaState.getPosicionInicial());
+                    caperucitaEnvironment.setScenary(caperucitaEnvironment.getInicialScenary());
+                    caperucitaEnvironment.setWolfPosition(caperucitaEnvironment.getWolfInitialPosition());
+                    caperucitaState.setKnownScenary(caperucitaState.getInicialKnownScenary());
                 }
             }
 
             if (!sigueRecorriendo)
                 break;
         }
+
+        caperucitaEnvironment.moveWolf();
+        caperucitaState.removeWolfFromForest();
 
         return caperucitaEnvironment;
     }
