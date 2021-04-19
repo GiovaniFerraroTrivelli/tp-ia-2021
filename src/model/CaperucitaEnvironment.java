@@ -1,5 +1,6 @@
 package model;
 
+import frsf.cidisi.faia.agent.Action;
 import frsf.cidisi.faia.agent.Perception;
 import frsf.cidisi.faia.environment.Environment;
 import scenary.Scenary;
@@ -41,4 +42,7 @@ public class CaperucitaEnvironment extends Environment {
         return environmentState.toString();
     }
 
+    public boolean agentFailed(Action actionReturned) {
+        return ((CaperucitaEnvironmentState)this.environmentState).isCaperucitaDead();
+    }
 }

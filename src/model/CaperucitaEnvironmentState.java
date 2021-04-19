@@ -16,6 +16,7 @@ public class CaperucitaEnvironmentState extends EnvironmentState {
     private Point caperucitaPosition;
     private ArrayList<Point> wolfSpawnPoints;
     private Point wolfInitialPosition;
+    public boolean isCaperucitaDead;
 
     public CaperucitaEnvironmentState(Scenary scenary) {
         currentForest = scenary.getForest();
@@ -78,6 +79,14 @@ public class CaperucitaEnvironmentState extends EnvironmentState {
 
     public void setWolfInitialPosition(Point wolfInitialPosition) {
         this.wolfInitialPosition = wolfInitialPosition;
+    }
+
+    public boolean isCaperucitaDead() {
+        return isCaperucitaDead;
+    }
+
+    public void setCaperucitaDead(boolean caperucitaDead) {
+        isCaperucitaDead = caperucitaDead;
     }
 
     @Override

@@ -124,8 +124,6 @@ public class CaperucitaState extends SearchBasedAgentState {
                 break;
             }
         }
-
-        System.out.println("HOLA");
     }
 
     @Override

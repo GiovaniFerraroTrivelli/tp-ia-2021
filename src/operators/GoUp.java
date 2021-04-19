@@ -95,8 +95,15 @@ public class GoUp extends SearchAction {
                     sigueRecorriendo = false;
                 }
                 case SCENARY_WOLF -> {
+                    int vidas = caperucitaState.getVidas();
+                    caperucitaState.setVidas(vidas - 1);
                     caperucitaState.setTortas(0);
-                    caperucitaState.setVidas(caperucitaState.getVidas() - 1);
+
+                    if(vidas < 1) {
+                        caperucitaEnvironment.setCaperucitaDead(true);
+                        return caperucitaEnvironment;
+                    }
+
                     caperucitaState.setPosicionActual(caperucitaState.getPosicionInicial());
                     caperucitaEnvironment.setScenary(caperucitaEnvironment.getInicialScenary());
                     caperucitaEnvironment.setWolfPosition(caperucitaEnvironment.getWolfInitialPosition());
