@@ -13,6 +13,7 @@ import java.awt.*;
 import static constants.Constants.*;
 
 public class GoUp extends SearchAction {
+    private Double cost;
 
     @Override
     public SearchBasedAgentState execute(SearchBasedAgentState s) {
@@ -26,11 +27,16 @@ public class GoUp extends SearchAction {
 
         int[] newColumn = new int[SCENARY_HEIGHT];
         boolean sigueRecorriendo = true;
+        int distanciaRecorrida = 0;
+        int cantTortas = 0;
+        int lobo = 0;
+        this.cost = 0.0;
 
         for (int i = posicionActual.y; i >= 0; i--) {
             switch (columnaActual[i]) {
                 case SCENARY_CAKE -> {
                     caperucitaState.setTortas(caperucitaState.getTortas() + 1);
+                    cantTortas++;
                     newColumn[i] = 0;
                 }
                 case SCENARY_TREE -> {
@@ -44,17 +50,28 @@ public class GoUp extends SearchAction {
                     sigueRecorriendo = false;
                 }
                 case SCENARY_WOLF -> {
-                    return null;
+                    int vidas = caperucitaState.getVidas();
+                    //if(vidas == 1) return null;
+
+                    lobo++;
+
+                    caperucitaState.setVidas(vidas - 1);
+                    caperucitaState.setTortas(0);
                 }
             }
 
             if (!sigueRecorriendo)
                 break;
+            else
+                distanciaRecorrida++;
         }
 
         if(sigueRecorriendo) {
             caperucitaState.setPosicionActual(new Point(posicionActual.x, 1));
         }
+
+        this.cost = MOVEMENT_COST * distanciaRecorrida - cantTortas * MOVEMENT_CAKE_COST + lobo * MOVEMENT_WOLF_COST;
+        this.cost = this.cost < 1.0 ? 1.0 : this.cost;
 
         caperucitaState.updateColumn(newColumn, false);
         return caperucitaState;
@@ -62,7 +79,7 @@ public class GoUp extends SearchAction {
 
     @Override
     public Double getCost() {
-        return 1.0;
+        return this.cost;
     }
 
     @Override
@@ -99,15 +116,18 @@ public class GoUp extends SearchAction {
                     caperucitaState.setVidas(vidas - 1);
                     caperucitaState.setTortas(0);
 
-                    if(vidas < 1) {
+                    if(vidas == 1) {
                         caperucitaEnvironment.setCaperucitaDead(true);
                         return caperucitaEnvironment;
                     }
 
                     caperucitaState.setPosicionActual(caperucitaState.getPosicionInicial());
-                    caperucitaEnvironment.setScenary(caperucitaEnvironment.getInicialScenary());
-                    caperucitaEnvironment.setWolfPosition(caperucitaEnvironment.getWolfInitialPosition());
                     caperucitaState.setKnownScenary(caperucitaState.getInicialKnownScenary());
+                    caperucitaEnvironment.setScenary(caperucitaEnvironment.getInitialForest());
+                    caperucitaEnvironment.setWolfPosition(caperucitaEnvironment.getWolfInitialPosition());
+                    caperucitaEnvironment.setCaperucitaPosition(caperucitaState.getPosicionInicial());
+
+                    sigueRecorriendo = false;
                 }
             }
 

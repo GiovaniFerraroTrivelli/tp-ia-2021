@@ -131,12 +131,12 @@ public class CaperucitaState extends SearchBasedAgentState {
         StringBuilder matrix = new StringBuilder();
         matrix.append("Estado Caperucita [x=" + this.posicionActual.x + ", y=" + this.posicionActual.y + "] [tortas=" + this.tortas + ", vidas=" + this.vidas + "]\n\n");
 
-        for (int i = 0; i < SCENARY_HEIGHT; i++) {
+        /*for (int i = 0; i < SCENARY_HEIGHT; i++) {
             matrix.append("\n").append(this.knownScenary[i][0]);
             for (int j = 1; j < SCENARY_WIDTH; j++) {
                 matrix.append(" ").append(this.knownScenary[i][j]);
             }
-        }
+        }*/
 
         return matrix.toString();
     }

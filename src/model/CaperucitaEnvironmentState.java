@@ -10,8 +10,8 @@ import java.util.Random;
 import static constants.Constants.*;
 
 public class CaperucitaEnvironmentState extends EnvironmentState {
-    private final int[][] INITIAL_FOREST = new int[SCENARY_HEIGHT][SCENARY_WIDTH];
-    private int[][] currentForest = INITIAL_FOREST;
+    private int[][] initialForest;
+    private int[][] currentForest;
     private Point wolfPosition;
     private Point caperucitaPosition;
     private ArrayList<Point> wolfSpawnPoints;
@@ -24,6 +24,7 @@ public class CaperucitaEnvironmentState extends EnvironmentState {
         caperucitaPosition = scenary.getCaperucitaPosition();
         wolfSpawnPoints = scenary.getWolfSpawnPoints();
         wolfInitialPosition = new Point(wolfPosition.x, wolfPosition.y);
+        initialForest = scenary.getInicialForest();
     }
 
     public int[][] getForest() {
@@ -48,10 +49,6 @@ public class CaperucitaEnvironmentState extends EnvironmentState {
 
     public void setCaperucitaPosition(Point caperucitaPosition) {
         this.caperucitaPosition = caperucitaPosition;
-    }
-
-    public int[][] getInicialScenary() {
-        return INITIAL_FOREST;
     }
 
     public int[][] getCurrentForest() {
@@ -87,6 +84,14 @@ public class CaperucitaEnvironmentState extends EnvironmentState {
 
     public void setCaperucitaDead(boolean caperucitaDead) {
         isCaperucitaDead = caperucitaDead;
+    }
+
+    public int[][] getInitialForest() {
+        return initialForest;
+    }
+
+    public void setInitialForest(int[][] initialForest) {
+        this.initialForest = initialForest;
     }
 
     @Override

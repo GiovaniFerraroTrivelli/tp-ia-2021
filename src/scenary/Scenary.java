@@ -7,6 +7,7 @@ import static constants.Constants.*;
 
 public abstract class Scenary {
     protected int[][] forest;
+    protected int[][] inicialForest;
     protected ArrayList<Point> flowersPosition;
     protected Point wolfPosition;
     protected Point caperucitaPosition;
@@ -33,6 +34,8 @@ public abstract class Scenary {
                 }
             }
         }
+
+        this.inicialForest = this.forest.clone();
     }
 
     public int[][] getForest() {
@@ -61,5 +64,13 @@ public abstract class Scenary {
 
     public void setWolfSpawnPoints(ArrayList<Point> wolfSpawnPoints) {
         this.wolfSpawnPoints = wolfSpawnPoints;
+    }
+
+    public int[][] getInicialForest() {
+        return inicialForest;
+    }
+
+    public void setInicialForest(int[][] inicialForest) {
+        this.inicialForest = inicialForest;
     }
 }

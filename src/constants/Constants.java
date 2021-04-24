@@ -13,4 +13,8 @@ public class Constants {
     public static final int SCENARY_HEIGHT = 9;
 
     public static final int MAX_TORTAS = 3;
+
+    public static final Double MOVEMENT_COST = 2.0;
+    public static final Double MOVEMENT_CAKE_COST = 10.0;
+    public static final Double MOVEMENT_WOLF_COST = 420.0;
 }

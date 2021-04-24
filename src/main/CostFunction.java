@@ -1,4 +1,3 @@
-/*
 package main;
 
 import frsf.cidisi.faia.solver.search.IStepCostFunction;
@@ -11,4 +10,3 @@ public class CostFunction implements IStepCostFunction {
         return node.getAction().getCost();
     }
 }
-*/

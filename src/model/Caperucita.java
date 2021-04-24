@@ -5,8 +5,9 @@ import frsf.cidisi.faia.agent.Perception;
 import frsf.cidisi.faia.agent.search.Problem;
 import frsf.cidisi.faia.agent.search.SearchAction;
 import frsf.cidisi.faia.agent.search.SearchBasedAgent;
-import frsf.cidisi.faia.solver.search.BreathFirstSearch;
-import frsf.cidisi.faia.solver.search.Search;
+import frsf.cidisi.faia.solver.search.*;
+import main.CostFunction;
+import main.Heuristic;
 import operators.GoDown;
 import operators.GoLeft;
 import operators.GoRight;
@@ -43,7 +44,7 @@ public class Caperucita extends SearchBasedAgent {
 
     @Override
     public Action selectAction() {
-        BreathFirstSearch strategy = new BreathFirstSearch();
+        AStarSearch strategy = new AStarSearch(new CostFunction(), new Heuristic());
 
         // Create a Search object with the strategy
         Search searchSolver = new Search(strategy);
